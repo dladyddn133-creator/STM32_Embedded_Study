@@ -1,4 +1,8 @@
 #include "device_driver.h"
+#define TIM2_TICK         	(20) 				// usec
+#define TIM2_FREQ 	  		(1000000/TIM2_TICK)	// Hz
+#define TIME2_PLS_MS  	(1000/TIM2_TICK)
+#define TIM2_MAX	  		(0xffffu)
 
 void TIM2_Stopwatch_Start(void)
 {
@@ -36,16 +40,20 @@ void TIM2_Delay(int time)
 	Macro_Set_Bit(RCC->APB1ENR, 0);
 
 	// TIM2 CR1 설정: down count, one pulse
-	TIM2->CR1 |= ((0<<7)|(0x1<<4)|(0x1<<3)); 
+	TIM2->CR1 |= ((0x1<<4)|(0x1<<3)); 
 	// PSC 초기값 설정 => 20usec tick이 되도록 설계 (50KHz)
-	TIM2->PSC = 1920;
+	TIM2->PSC = (unsigned int)(TIMXCLK/50000.0 + 0.5)-1;
 	// ARR 초기값 설정 => 요청한 time msec에 해당하는 초기값 설정
-	TIM2->ARR = time;
+	TIM2->ARR = TIM2_PLS_MS * time;
 	// UG 이벤트 발생
+	Macro_Set_Bit(TIM2->EGR,0);
 
 	// UIF(Update Interrupt Pending) Clear
+	Macro_Clear_Bit(TIM2->SR,0);
 	// TIM2 start
+	Macro_Set_Bit(TIM2->CR,0);
 	// Wait timeout
+	while(Macro_Check_Bit_Clear(TIM2->SR,0));
 
 	// TIM2 Stop
 	Macro_Clear_Bit(TIM2->CR1, 0);
