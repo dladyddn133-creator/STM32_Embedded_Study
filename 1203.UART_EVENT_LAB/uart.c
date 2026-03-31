@@ -52,8 +52,11 @@ void Uart2_RX_Interrupt_Enable(int en)
   if(en)
   {
 		// USART2 RX Interrupt Enable
+    Macro_Set_Bit(USART2->CR1,5);
 		// NIVC Pending Clear
+    NVIC_ClearPendingIRQ((IRQn_Type)38);
 		// NVIC Interrupt Enable
+    NVIC_EnableIRQ((IRQn_Type)38);
 
   }
   else
