@@ -11,11 +11,9 @@ void MOTOR_Init(void)
     Macro_Write_Block(GPIOA->AFR[0], 0xFF, 0x11, 0);
 
     // TIM2 설정 (5kHz)
-    TIM2->PSC = 47;
+    TIM2->PSC = 19199;
 	// 요청한 주파수가 되도록 ARR 설정
-	TIM2->ARR = 199;
-    // TIM2->PSC = 100 - 1;   // 100MHz / 100 = 1MHz
-    // TIM2->ARR = 200 - 1;   // 1MHz / 200 = 5kHz
+	TIM2->ARR = 1999;
     
     // PWM Mode 1 설정 (CH1, CH2)
     TIM2->CCMR1 = (6 << 4) | (6 << 12);
@@ -33,7 +31,7 @@ void MOTOR_Speed_Set(int step)
     if (step > 9) step = 9;
     
     // 9단계 분할 (ARR=200 기준, 단계당 약 22씩 증가)
-    unsigned int duty = step * 22; 
+    unsigned int duty = step * 199; 
     
     // 현재 방향에 맞춰 CCR 업데이트 (전역 변수로 방향 관리 권장)
     // 여기서는 간단히 두 채널 모두 업데이트 로직에 활용
