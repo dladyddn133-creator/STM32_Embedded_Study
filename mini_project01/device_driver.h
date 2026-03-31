@@ -58,3 +58,4 @@ extern void MOTOR_Init(void);
 extern void MOTOR_CW(void);
 extern void MOTOR_CCW(void);
 extern void MOTOR_STOP(void);
+extern void MOTOR_Speed_Set(int step);

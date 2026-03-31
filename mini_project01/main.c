@@ -12,40 +12,37 @@ static void Sys_Init(int baud)
 
 void Main(void)
 {
-	Sys_Init(115200);
-	Uart1_Init(115200);
-	
-	volatile int i;
-	MOTOR_Init();
+    Sys_Init(115200);
+    Uart1_Init(115200);
+    MOTOR_Init();
 
-	for(;;)
-	{
-		char key = Uart1_Get_Pressed();
-		
-		if(key != 0)
+    int current_speed = 9;
+	volatile int i;
+    for(;;)
+    {
+        char key = Uart1_Get_Pressed();
+
+        if(key != 0)
         {
-            switch(key)
-            {
-                case 's': // Start (정회전)
-					MOTOR_STOP();
-					for(i=0;i<1000;i++);
-                    MOTOR_CW();
-                    Uart1_Printf("\n[Motor] Forward (CW)");
-                    break;
-                case 'r': // Reverse (역회전)
-					MOTOR_STOP();
-					for(i=0;i<1000;i++);
-                    MOTOR_CCW();
-                    Uart1_Printf("\n[Motor] Backward (CCW)");
-                    break;
-                case 'f': // Finish (정지)
-                    MOTOR_STOP();
-                    Uart1_Printf("\n[Motor] Stop");
-                    break;
-                default:
-                    // 정의되지 않은 키는 무시
-                    break;
+            if(key >= '1' && key <= '9') {
+                current_speed = key - '0'; // 문자를 숫자로 변환
+                MOTOR_Speed_Set(current_speed);
+                Uart1_Printf("\n[Speed] Set to %d", current_speed);
             }
+            else if(key == 's')
+			{
+				MOTOR_STOP();
+				for(i=0;i<1000;i++);
+				MOTOR_CW();
+			}
+            else if(key == 'r')
+			{
+				MOTOR_STOP();
+				for(i=0;i<1000;i++);
+				MOTOR_CCW();
+			}
+            else if(key == 'f') 
+			MOTOR_STOP();
         }
-	}
+    }
 }
