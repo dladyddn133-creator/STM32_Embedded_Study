@@ -128,6 +128,7 @@ void TIM4_Repeat_Interrupt_Enable(int en, int time)
 	if(en)
 	{
 		// TIM4 Clock On
+		Macro_Set_Bit(RCC->APB1ENR, 2);
 
 		TIM4->CR1 = (1<<4)|(0<<3);
 		TIM4->PSC = (unsigned int)(TIMXCLK/(double)TIM4_FREQ + 0.5)-1;
@@ -135,13 +136,15 @@ void TIM4_Repeat_Interrupt_Enable(int en, int time)
 		Macro_Set_Bit(TIM4->EGR,0);
 
 		// TIM4 Pending Clear
+		Macro_Clear_Bit(TIM4->SR,0); 
 		// NVIC Pending Clear
-
+		NVIC_ClearPendingIRQ((IRQn_Type)30);
 		// TIM4 Interrupt Enable
+		Macro_Set_Bit(TIM4->DIER, 0);
 		// NVIC Interrupt Enable
-
+		NVIC_EnableIRQ((IRQn_Type)30);
 		// TIM4 Start
-
+		Macro_Set_Bit(TIM4->CR1,0);
 	}
 
 	else
