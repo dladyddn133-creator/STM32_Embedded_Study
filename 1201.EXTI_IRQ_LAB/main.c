@@ -17,6 +17,7 @@ void Main(void)
 
 	Key_ISR_Enable(1);
 
+
 	for(;;)
 	{
 		printf(".");
