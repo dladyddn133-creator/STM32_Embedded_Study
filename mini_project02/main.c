@@ -13,17 +13,32 @@ static void Sys_Init(int baud)
 void Main(void)
 {
 	Sys_Init(115200);
+    MOTOR_Init();
+    Uart1_Init(115200);
+
+
 	printf("ADC Test\n");
-		
-	volatile int i;
+	MOTOR_CW();
+	
+	// volatile int i;
 
 	ADC1_IN6_Init();
+
+    int current_speed = 9;
 
 	for(;;)
 	{
 		ADC1_Start();
 		while(!ADC1_Get_Status());
-		printf("0x%.4X\n", ADC1_Get_Data());
-		for(i=0; i<0x400000; i++);
+		int key = ((int)ADC1_Get_Data()-1000)/100;
+
+		if(key >= 0 && key <= 9)
+		{
+			current_speed = key; // 문자를 숫자로 변환
+			MOTOR_Speed_Set(current_speed);
+			Uart1_Printf("\n[Speed] Set to %d", current_speed);
+		}
+		// printf("0x%.4X\n", ADC1_Get_Data());
+		// for(i=0; i<0x400000; i++);
 	}
 }

@@ -80,3 +80,12 @@ extern void ADC1_Start(void);
 extern void ADC1_Stop(void);
 extern int ADC1_Get_Status(void);
 extern int ADC1_Get_Data(void);
+
+// motor.c
+
+extern void MOTOR_Init(void);
+extern void MOTOR_Speed_Set(int step);
+extern void MOTOR_CW(void);
+extern void MOTOR_CCW(void);
+extern void MOTOR_STOP(void);
+
