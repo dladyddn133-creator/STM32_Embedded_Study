@@ -41,6 +41,7 @@ extern int Key_Get_Pressed(void);
 extern void Key_Wait_Key_Released(void);
 extern void Key_Wait_Key_Pressed(void);
 extern void Key_ISR_Enable(int en);
+extern void Key_PB9_ISR_Enable(int en);
 
 // Timer.c
 
