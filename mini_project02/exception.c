@@ -10,10 +10,14 @@ void _Invalid_ISR(void)
 }
 
 extern volatile int Key_Pressed;
+extern volatile int Key_Pressed_2;
+
 
 void EXTI15_10_IRQHandler(void)
 {
 	Key_Pressed = !Key_Pressed;
+    Key_Pressed_2 = 0;
+
 	
 	EXTI->PR = 0x1 << 13;
 	NVIC_ClearPendingIRQ(40);
@@ -33,7 +37,8 @@ void EXTI9_5_IRQHandler(void)
         if(Macro_Check_Bit_Clear(GPIOB->IDR, 9)) 
         {
             // 실제 버튼 눌림 처리
-            MOTOR_STOP();
+			Key_Pressed = 0;
+            Key_Pressed_2 = !Key_Pressed_2;
         }
         
         SysTick_Stop(); // 타이머 종료

@@ -11,6 +11,8 @@ static void Sys_Init(int baud)
 }
 
 volatile int Key_Pressed = 0;
+volatile int Key_Pressed_2 = 0;
+
 
 volatile int Uart_Data_In;
 volatile unsigned char Uart_Data;
@@ -33,10 +35,11 @@ void Main(void)
 	ADC1_IN6_Init();
 
     int current_speed = 9;
+	volatile int i;
 
 	for(;;)
 	{
-		if(Key_Pressed)
+		if(Key_Pressed && Key_Pressed_2!=1)
 		{
 			ADC1_Start();
 			while(!ADC1_Get_Status());
@@ -48,6 +51,12 @@ void Main(void)
 				MOTOR_Speed_Set(current_speed);
 				Uart1_Printf("\n[Speed] Set to %d", current_speed);
 			}
+		}
+		else if(Key_Pressed!=1 && Key_Pressed_2)
+		{
+			MOTOR_Speed_Set(current_speed--);
+			for(i=0;i<0x80000;i++)
+			Uart1_Printf("\n[Speed] Set to %d", current_speed);
 		}
 		// printf("0x%.4X\n", ADC1_Get_Data());
 		// for(i=0; i<0x400000; i++);
