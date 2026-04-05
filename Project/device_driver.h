@@ -1,41 +1,29 @@
-// 통합 헤더
 #include "stm32f4xx.h"
 #include "option.h"
 #include "macro.h"
 #include "malloc.h"
 
-// Uart.c
-
-extern void Uart2_Init(int baud);
-extern void Uart2_Send_Byte(char data);
-extern void Uart2_RX_Interrupt_Enable(int en);
-
-// Led.c
-
-extern void LED_Init(void);
-extern void LED_On(void);
-extern void LED_Off(void);
-
-// Clock.c
-
+// System
+extern volatile unsigned int System_Tick;
 extern void Clock_Init(void);
-
-// Key.c
-
-extern void Key_ISR_Enable(int en);
-
-// Timer.c
-
+extern void Uart2_Init(int baud);
 extern void TIM4_Repeat_Interrupt_Enable(int en, int time);
 
-// Adc.c
+// Sensors (PA2: 수위, PA3: 조도)
+extern void ADC1_Init(void);
+extern int ADC1_Read_Channel(int ch);
 
-extern void ADC1_IN6_Init(void);
-extern void ADC1_Start(void);
-extern void ADC1_Stop(void);
-extern int ADC1_Get_Status(void);
-extern int ADC1_Get_Data(void);
+// Actuators
+extern void Env_LED_Init(void);                // PB7
+extern void Env_LED_On(void);
+extern void Env_LED_Off(void);
 
-// motor.c (추가!)
-extern void Motor_Init(void);
-extern void Motor_Set(int dir, int duty);
+extern void Step_Init(void);                   // PB8, 9, 10, 14
+extern void Step_Move(int steps, int dir);
+
+extern void Pump_Init(void);                   // PB1, PB2
+extern void Pump_Set(int enable, int duty);
+
+extern void Servo_Init(void);                  // PA0, PA1
+extern void Servo_Door_Set(int angle);
+extern void Servo_Hose_Set(int angle);
